@@ -1,13 +1,13 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import App from './App.vue'
 import router from './router'
 import { useMainStore } from '@/stores/main.js'
-
 import './css/main.css'
 import axios from 'axios'
 
+// Init Pinia
+const pinia = createPinia()
 
 
 //axios header
@@ -16,8 +16,20 @@ axios.defaults.headers.common['Authorization'] = "Bearer: " + localStorage.getIt
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
 axios.defaults.headers.common['Access-Control-Allow-Credentials'] = 'true'
 
-// Init Pinia
-const pinia = createPinia()
+
+axios.interceptors.response.use(function (response) {
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  // Do something with response data
+  return response;
+}, function (error) {
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  if (error.response.status === 401) {
+      localStorage.removeItem("access_token");
+      router.push({ name: 'login', query: { err: 1 } })
+  }
+  return Promise.reject(error);
+});
 
 // Create Vue app
 createApp(App).use(router).use(pinia).mount('#app')
@@ -29,21 +41,9 @@ const mainStore = useMainStore(pinia)
 mainStore.fetchSampleClients()
 mainStore.fetchSampleHistory()
 
-// Dark mode
-// Uncomment, if you'd like to restore persisted darkMode setting, or use `prefers-color-scheme: dark`. Make sure to uncomment localStorage block in src/stores/darkMode.js
-// import { useDarkModeStore } from './stores/darkMode'
-
-// const darkModeStore = useDarkModeStore(pinia)
-
-// if (
-//   (!localStorage['darkMode'] && window.matchMedia('(prefers-color-scheme: dark)').matches) ||
-//   localStorage['darkMode'] === '1'
-// ) {
-//   darkModeStore.set(true)
-// }
 
 // Default title tag
-const defaultDocumentTitle = 'Admin One Vue 3 Tailwind'
+const defaultDocumentTitle = 'ZEA'
 
 // Set document title from route meta
 router.afterEach((to) => {

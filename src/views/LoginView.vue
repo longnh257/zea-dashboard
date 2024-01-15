@@ -11,6 +11,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import CardBoxModal from '@/components/CardBoxModal.vue'
+import axios from 'axios'
 
 const form = reactive({
   login: '',
@@ -18,22 +19,43 @@ const form = reactive({
   remember: true
 })
 
+const loading = ref(false)
+const err = ref(false)
+const scc = ref(false)
+
 const modalThreeActive = ref(false)
 const router = useRouter()
 
+
 const submit = () => {
-  console.log(form);
-  modalThreeActive.value = true
-  /* 
-  router.push('/dashboard') */
-}
+  loading.value = true
+  axios
+    .post("/login", {
+      form
+    })
+    .then(function (response) {
+      // handle success
+      scc.value = response.data.message;
+      successNotification.value?.showToast();
+      const access_token = response.data.data.access_token
+      localStorage.setItem("access_token", access_token);
+      axios.defaults.headers.common['Authorization'] = "Bearer: " + access_token
+      router.push(`/`);
+    })
+    .catch(function (error) {
+      // handle error
+      err.value = error?.response?.data?.message;
+      modalThreeActive.value = true
+      loading.value = false
+    });
+};
 </script>
 
 <template>
   <LayoutGuest>
     <SectionFullScreen v-slot="{ cardClass }">
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
-        <FormField label="Login" help="Please enter your login">
+        <FormField label="Username" help="Please enter your username">
           <FormControl
             v-model="form.login"
             :icon="mdiAccount"
@@ -62,14 +84,13 @@ const submit = () => {
         <template #footer>
           <BaseButtons>
             <BaseButton type="submit" color="info" label="Login" />
-            <BaseButton to="/dashboard" color="info" outline label="Back" />
+            <BaseButton to="/" color="info" outline label="Back" />
           </BaseButtons>
         </template>
       </CardBox>
     </SectionFullScreen>
   </LayoutGuest>
-  <CardBoxModal v-model="modalThreeActive" title="Succeass" button="success" button-label="Confirm">
-    <p>This is sample a a a modal</p>
-    <p>Lorem ipsu a m dolor</p>
+  <CardBoxModal v-model="modalThreeActive" title="Login failed!" button="danger" button-label="Close">
+    <p>Invalid username or password. Please try again!</p>
   </CardBoxModal>
 </template>

@@ -7,15 +7,15 @@ const year = new Date().getFullYear()
 </script>
 
 <template>
-  <footer class="py-2 px-6" :class="containerMaxW">
+  <footer class="py-2 px-6" >
     <BaseLevel>
       <div class="text-center md:text-left">
-        <b>&copy;{{ year }}, <a href="https://justboil.me/" target="_blank">JustBoil.me</a>.</b>
+        <b>&copy;{{ year }}, <a href="##" target="_blank">ZEA</a>.</b>
         <slot />
       </div>
       <div class="md:py-2">
-        <a href="https://justboil.me">
-          <JustboilLogo class="w-auto h-8 md:h-6" />
+        <a href="##">
+          <!--    <JustboilLogo class="w-auto h-8 md:h-6" /> -->
         </a>
       </div>
     </BaseLevel>

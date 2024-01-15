@@ -16,13 +16,13 @@
   .switch input[type='checkbox'] + .check {
     @apply border-gray-700 border transition-colors duration-200 dark:bg-slate-800;
   }
-
+/* 
   .checkbox input[type='checkbox']:focus + .check,
   .radio input[type='radio']:focus + .check,
   .switch input[type='checkbox']:focus + .check {
     @apply ring ring-blue-700;
   }
-
+ */
   .checkbox input[type='checkbox'] + .check,
   .radio input[type='radio'] + .check {
     @apply block w-5 h-5;

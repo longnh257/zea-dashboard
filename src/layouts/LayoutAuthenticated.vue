@@ -74,10 +74,10 @@ const menuClick = (event, item) => {
       />
       <slot />
       <FooterBar>
-        Get more with
+        <!-- Get more with
         <a href="https://tailwind-vue.justboil.me/" target="_blank" class="text-blue-600"
           >Premium version</a
-        >
+        > -->
       </FooterBar>
     </div>
   </div>
